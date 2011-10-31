@@ -196,7 +196,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				elif (rename['tvformat']):
 					s = rename['tvformat']
 				else:
-					s = '%ATe% - %EpNo%%Ver% - %ETe% [%GTs%][%FCRC%].%suf%'
+					s = '%ATe% - %EpNo%%Ver% - %ETe% [%GTs%][%FCRC%]'
 				
 				rename_data = {
 					#Anime title, r: romaji, e: english, k: kanji, s: synonym, o: other
@@ -297,3 +297,5 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 # Finished.
 
 print(blue('Hashed {0} files{1}.'.format(hashed, ', {0} unknown'.format(unknown) if unknown else '')))
+if (unknown > 0):
+	sys.exit(1)
