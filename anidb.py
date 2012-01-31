@@ -109,6 +109,7 @@ files = []
 remaining = deque(args)
 while remaining:
 	name = remaining.popleft()
+	name = name.replace("'", "")
 	if not os.access(name, os.R_OK):
 		print('{0} {1}'.format(red('Invalid file:'), name))
 	elif os.path.isfile(name):
@@ -267,7 +268,8 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 			if (options.move):
 				path = os.path.join(options.directory, info['english'])
-				path = path.replace(':', '')
+				if (os.name == "posix"):
+					path = path.replace(':', '')
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
 					os.umask(0007)
