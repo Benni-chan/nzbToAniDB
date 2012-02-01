@@ -267,7 +267,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				path = os.path.join(options.directory, info['english'])
+				path = os.path.join(options.directory, info['english'].replace(':', ' -').replace('\\', '_').replace('/', '_'))
 				if (os.name == "posix"):
 					path = path.replace(':', '')
 				print('{0} {1}'.format(yellow('Moving to:'), path))
