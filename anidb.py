@@ -263,14 +263,18 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			
 			if (options.rename):
 				if (os.name == "posix"):
-					filename = s
+					filename = s.replace('/', '+')
 				else:
 					filename = s.replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				subdir = info['english'].replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				subdir = info['english']
+				if (os.name == "posix"):
+					subdir = info['english'].replace('/', '+')
+				else:
+					subdir = info['english'].replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				path = os.path.join(options.directory, subdir)
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
