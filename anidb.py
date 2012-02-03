@@ -256,13 +256,16 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
-				s = s.replace('/', '_')
-				s = s.replace(':', '')
+					s = s.replace('/', '_')
+					s = s.replace(':', '')
 			
 			filename = os.path.basename(file.name)
 			
 			if (options.rename):
-				filename = s
+				if (os.name == "posix"):
+					filename = s
+				else:
+					filename = s.replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
 				path = os.path.dirname(file.name)
 				
