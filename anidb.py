@@ -270,9 +270,8 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				path = os.path.join(options.directory, info['english'].replace(':', ' -').replace('\\', '_').replace('/', '_'))
-				if (os.name == "posix"):
-					path = path.replace(':', '')
+				subdir = info['english'].replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				path = os.path.join(options.directory, subdir)
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
 					os.umask(0007)
