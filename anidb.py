@@ -119,7 +119,7 @@ while remaining:
 			print('{0} {1}'.format(red('Is a directory:'), name))
 		else:
 			for sub in sorted(os.listdir(name)):
-				if sub.startswith('.'):
+				if os.name == "posix" and sub.startswith('.'):
 					continue
 				sub = os.path.join(name, sub)
 				if os.path.isfile(sub) and any(sub.lower().endswith('.' + suffix) for suffix in options.suffix):
