@@ -265,7 +265,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				if (os.name == "posix"):
 					filename = s.replace('/', '+')
 				else:
-					filename = s.replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+					filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				while filename.startswith('.'):
 					filename = filename[1:]
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
@@ -276,7 +276,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				if (os.name == "posix"):
 					subdir = info['english'].replace('/', '+')
 				else:
-					subdir = info['english'].replace('/', '+').replace('\\', '+').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+					subdir = info['english'].replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
 				path = os.path.join(options.directory, subdir)
