@@ -55,11 +55,13 @@ op.add_option('-n', '--rename', help = 'Rename files.',
 	action = 'store_true', dest = 'rename', default = False)
 op.add_option('-m', '--move', help = 'Move Files',
 	action = 'store_true', dest = 'move', default = False)
+op.add_option('-x', '--delete', help = 'Delete Folders after moving files',
+	action = 'store_true', dest = 'delete', default = False)
 
 op.add_option('-d', '--directory', help = 'Target parent directory.',
 	action = 'store', dest = 'directory', default = config.get('directory'))
 
-op.add_option('-x', '--no-color', help = 'Disable color output.',
+op.add_option('-o', '--no-color', help = 'Disable color output.',
 	action = 'store_false', dest = 'color', default = True)
 
 
@@ -101,6 +103,10 @@ if options.login:
 
 if not options.directory and options.move:
 	print(red('No target directory.'))
+	sys.exit(1)
+	
+if not options.move and options.delete:
+	print(red('Can\'t delete folder without moving files.'))
 	sys.exit(1)
 
 # Input files.
@@ -287,6 +293,19 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					os.mkdir(path,0770)
 			
 			shutil.move(file.name, os.path.join(path,filename))
+		
+		if options.delete:
+			delete_folder = True
+			folder = os.path.dirname(file.name)
+			for sub in sorted(os.listdir(folder)):
+				sub = os.path.join(folder, sub)
+				if os.path.isfile(sub) and any(sub.lower().endswith('.' + suffix) for suffix in options.suffix) or os.path.isdir(sub):
+					#don't delete
+					delete_folder = False
+			
+			if delete_folder:
+				shutil.rmtree(folder)
+		
 		
 		# Adding.
 		
