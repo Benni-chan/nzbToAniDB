@@ -259,6 +259,64 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				# change spaces to underscores, if first character in s is an underscore
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
+			
+			if options.move:
+				move = {}
+				try:
+					cp = ConfigParser.ConfigParser()
+					cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+					for option in cp.options('move'):
+						move[option] = cp.get('move', option)
+				except:
+					pass
+								
+				#s = options.format
+				if (move['foldername']):
+					f = move['foldername']
+				else:
+					f = '%ATe%'
+				
+				move_data = {
+					#Anime title, r: romaji, e: english, k: kanji, s: synonym, o: other
+					'ATr': info['romaji'],
+					'ATe': info['english'],
+					'ATk': info['kanji'],
+					'ATs': info['synonym'],
+					'ATo': info['other'],
+				
+					#Group title, s: short, l: long
+					'GTs':info['gtag'],
+					'GTl':info['gname'],
+				
+					'EpHiNo': info['eptotal'], #Highest (subbed) episode number
+					'EpCount': info['eptotal'], #Anime Episode count
+					'AYearBegin': info['year'].split("-")[0],
+					'AYearEnd':  info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
+					'ACatList': info['category'],
+					
+					'Type': info['type'], #Anime type, Value: 'Movie', 'TV', 'OVA', 'Web'
+					'Source': info['source'], #Where the file came from (HDTV, DTV, WWW, etc)
+					'Quality': info['quality'], #How good the quality of the file is (Very Good, Good, Eye Cancer)
+					'FVideoRes': info['vres'], #Video Resolution (e.g. 1920x1080)
+					'FALng': info['dublang'], #List of available audio languages (japanese, english'japanese'german)
+					'FSLng': info['sublang'], #List of available subtitle languages (japanese, english'japanese'german)
+					'FACodec': info['acodec'], #Codecs used for the Audiostreams
+					'FVCodec': info['vcodec'], #Codecs used for the Videostreams
+					'suf': info['filetype']}
+				
+				# parse f to replace tags
+				for name, value in move.items():
+					f = f.replace(r'%' + name + r'%', value)
+				
+				for name, value in move_data.items():
+					f = f.replace(r'%' + name + r'%', value)
+				
+				# change spaces to underscores, if first character in s is an underscore
+				if f[0] == '_':
+					f = f[1:].replace(' ', '_')
+			
+			
+			#do the rename and move
 				
 			filename = os.path.basename(file.name)
 			
@@ -273,11 +331,10 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				subdir = info['english']
 				if (os.name == "posix"):
-					subdir = info['english'].replace('/', '_').replace(':', ' -')
+					subdir = f.replace('/', '_').replace(':', ' -')
 				else:
-					subdir = info['english'].replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+					subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
 				path = os.path.join(options.directory, subdir)
