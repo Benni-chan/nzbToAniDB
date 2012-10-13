@@ -17,7 +17,7 @@ else:
 	command = os.path.join(os.path.dirname(sys.argv[0]), "anidb.py") + " -r -n -m -a -w -x '" + sys.argv[1] + "'"
 	if (os.name != "posix"):
 		args = shlex.split(command, posix=False)
-	else
+	else:
 		args = shlex.split(command)
 	retcode = subprocess.call(args)
 	
