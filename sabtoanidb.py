@@ -14,11 +14,12 @@ if len(sys.argv) < 2:
 	print "No folder supplied - is this being called from SABnzbd?"
 	sys.exit()
 else:
-	command = os.path.join(os.path.dirname(sys.argv[0]), "anidb.py") + " -r -n -m -a -w -x '" + sys.argv[1] + "'"
+	command = sys.executable + " " + os.path.join(os.path.dirname(sys.argv[0]), "anidb.py") + " -r -n -m -a -w -x '" + sys.argv[1] + "'"
 	if (os.name != "posix"):
 		args = shlex.split(command, posix=False)
 	else:
 		args = shlex.split(command)
+	
 	retcode = subprocess.call(args)
 	
 	config = {}
@@ -31,7 +32,7 @@ else:
 		pass
 	
 	# For SickBeard integration
-	if (os.path.exists(os.path.join(os.path.dirname(sys.argv[0]), config[sabToSickBeard_script])) == True):
+	if (os.path.exists(os.path.join(os.path.dirname(sys.argv[0]) and config['sabtosickbeard_script'])) == True):
 		subprocess.call(sys.argv)
 	
 	sys.exit(retcode)
