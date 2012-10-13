@@ -32,7 +32,7 @@ else:
 	retcode = subprocess.call(args)
 	
 	# For SickBeard integration
-	if (os.path.exists(os.path.join(os.path.dirname(sys.argv[0]) and config['sabtosickbeard_script'])) == True):
+	if (os.path.exists(os.path.join(os.path.dirname(sys.argv[0]), config['sabtosickbeard_script'])) == True):
 		subprocess.call(sys.argv)
 	
 	sys.exit(retcode)
