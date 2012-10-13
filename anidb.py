@@ -109,6 +109,7 @@ files = []
 remaining = deque(args)
 while remaining:
 	name = remaining.popleft()
+	name = name.replace("'", "")
 	if not os.access(name, os.R_OK):
 		print('{0} {1}'.format(red('Invalid file:'), name))
 	elif os.path.isfile(name):
@@ -118,7 +119,7 @@ while remaining:
 			print('{0} {1}'.format(red('Is a directory:'), name))
 		else:
 			for sub in sorted(os.listdir(name)):
-				if sub.startswith('.'):
+				if os.name == "posix" and sub.startswith('.'):
 					continue
 				sub = os.path.join(name, sub)
 				if os.path.isfile(sub) and any(sub.lower().endswith('.' + suffix) for suffix in options.suffix):
@@ -255,19 +256,30 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
-				s = s.replace('/', '_')
-				s = s.replace(':', '')
+					s = s.replace('/', '_')
+					s = s.replace(':', '')
 			
 			filename = os.path.basename(file.name)
 			
 			if (options.rename):
-				filename = s
+				if (os.name == "posix"):
+					filename = s.replace('/', '+')
+				else:
+					filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				while filename.startswith('.'):
+					filename = filename[1:]
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				path = os.path.join(options.directory, info['english'])
-				path = path.replace(':', '')
+				subdir = info['english']
+				if (os.name == "posix"):
+					subdir = info['english'].replace('/', '+')
+				else:
+					subdir = info['english'].replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				while subdir.startswith('.'):
+					subdir = subdir[1:]
+				path = os.path.join(options.directory, subdir)
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
 					os.umask(0007)
