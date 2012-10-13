@@ -23,7 +23,7 @@ you have to enter your anidb username and password into the config file. also yo
 %AYearEnd%:  The ending year of the anime
 %ACatList%: Category of the Anime
 
-%EpNo%: #File's Episode number
+%EpNo%: File's Episode number
 
 %Type%: Anime type, Value: Movie, TV, OVA, Web
 %Depr%: File is deprecated if the value is '1'
