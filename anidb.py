@@ -256,8 +256,9 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
-					s = s.replace('/', '_')
-					s = s.replace(':', '')
+				
+				s = s.replace('/', '_')
+				s = s.replace(':', '')
 			
 			filename = os.path.basename(file.name)
 			
