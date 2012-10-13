@@ -256,21 +256,15 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 				s = s + '.' + rename_data['suf']
 				
-				#for name, value in rename_data.items():
-				#	s = s.replace(r'%' + name + r'%', value)
-				
-				
+				# change spaces to underscores, if first character in s is an underscore
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
 				
-				s = s.replace('/', '_')
-				s = s.replace(':', '')
-			
 			filename = os.path.basename(file.name)
 			
 			if (options.rename):
 				if (os.name == "posix"):
-					filename = s.replace('/', '+')
+					filename = s.replace('/', '_').replace(':', ' -')
 				else:
 					filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				while filename.startswith('.'):
@@ -281,7 +275,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			if (options.move):
 				subdir = info['english']
 				if (os.name == "posix"):
-					subdir = info['english'].replace('/', '+')
+					subdir = info['english'].replace('/', '_').replace(':', ' -')
 				else:
 					subdir = info['english'].replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				while subdir.startswith('.'):
