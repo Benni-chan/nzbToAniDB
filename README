@@ -60,6 +60,7 @@ Options:
   -w, --watched         Mark files watched.
   -n, --rename          Rename files.
   -m, --move            Move Files
+  -x, --delete          Delete Folders after moving files
   -d DIRECTORY, --directory=DIRECTORY
                         Target parent directory.
-  -x, --no-color        Disable color output.
+  -o, --no-color        Disable color output.
