@@ -41,3 +41,25 @@ you have to enter your anidb username and password into the config file. also yo
 %FACodec%: Codecs used for the Audiostreams
 %FVCodec%: Codecs used for the Videostreams
 %suf%: File Suffix
+
+
+anidb.py has several commandline arguments:
+Options:
+  -h, --help            show this help message and exit
+  -u USERNAME, --username=USERNAME
+                        AniDB username.
+  -p PASSWORD, --password=PASSWORD
+                        AniDB password.
+  -r, --recursive       Recurse into directories.
+  -s SUFFIX, --suffix=SUFFIX
+                        File suffix for recursive matching.
+  -c, --no-cache        Do not use cached values.
+  -l, --multihash       Calculate additional checksums.
+  -i, --identify        Identify files.
+  -a, --add             Add files to mylist.
+  -w, --watched         Mark files watched.
+  -n, --rename          Rename files.
+  -m, --move            Move Files
+  -d DIRECTORY, --directory=DIRECTORY
+                        Target parent directory.
+  -x, --no-color        Disable color output.
