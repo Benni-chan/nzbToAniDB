@@ -3,7 +3,10 @@ Postprocessing Script for SABnzbd+
 To use the script, extract the zip into your sabnzbd script folder and select sabtoanidb.py as your post processing script in your anime category.
 you have to enter your anidb username and password into the config file. also you have to modify the target directory in the config file to tell the script, where your anime folder is. (the script will copy the files to a directory with the name of the anime in that folder.)
 
+Note:
+If you use the delete option to delete the sourcefolder after moving, external sub-files will be lost!
 
+Tags for renaming:
 %ATr%: Anime Name (Romaji)
 %ATe%: Anime Name (English)
 %ATk%: Anime Name (Kanji)
