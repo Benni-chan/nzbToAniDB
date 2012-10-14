@@ -350,7 +350,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			folder = os.path.dirname(file.name)
 			for sub in sorted(os.listdir(folder)):
 				sub = os.path.join(folder, sub)
-				if os.path.isfile(sub) and any(sub.lower().endswith('.' + suffix) for suffix in options.suffix) or os.path.isdir(sub):
+				if (os.path.isfile(sub) and any(sub.lower().endswith('.' + suffix) for suffix in options.suffix)) or (os.path.isdir(sub) and not os.path.basename(sub).startswith('.')):
 					#don't delete
 					delete_folder = False
 			
