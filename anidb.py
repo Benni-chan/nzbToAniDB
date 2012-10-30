@@ -109,6 +109,16 @@ if not options.move and options.delete:
 	print(red('Can\'t delete folder without moving files.'))
 	sys.exit(1)
 
+# filename renaming
+
+import unicodedata, string
+
+def removeDisallowedFilenameChars(filename):
+	validFilenameChars = "-_.()[]`' %s%s" % (string.ascii_letters, string.digits)
+	
+	cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
+	return ''.join(c for c in cleanedFilename if c in validFilenameChars)
+
 # Input files.
 
 files = []
@@ -321,20 +331,26 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			filename = os.path.basename(file.name)
 			
 			if (options.rename):
-				if (os.name == "posix"):
-					filename = s.replace('/', '_').replace(':', ' -')
-				else:
-					filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				filename = removeDisallowedFilenameChars(s)
+				
+				#if (os.name == "posix"):
+				#	filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				#else:
+				#	filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				
 				while filename.startswith('.'):
 					filename = filename[1:]
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
-				if (os.name == "posix"):
-					subdir = f.replace('/', '_').replace(':', ' -')
-				else:
-					subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '_').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				subdir = removeDisallowedFilenameChars(f)
+				
+				#if (os.name == "posix"):
+				#	subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				#else:
+				#	subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
+				
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
 				path = os.path.join(options.directory, subdir)
