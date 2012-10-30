@@ -333,11 +333,6 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			if (options.rename):
 				filename = removeDisallowedFilenameChars(s)
 				
-				#if (os.name == "posix"):
-				#	filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
-				#else:
-				#	filename = s.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
-				
 				while filename.startswith('.'):
 					filename = filename[1:]
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
@@ -345,11 +340,6 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 			if (options.move):
 				subdir = removeDisallowedFilenameChars(f)
-				
-				#if (os.name == "posix"):
-				#	subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
-				#else:
-				#	subdir = f.replace('/', '_').replace('\\', '_').replace(':', ' -').replace('*', '_').replace('?', '').replace('"', '\'').replace('<', '_').replace('>', '_').replace('|', '_')
 				
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
