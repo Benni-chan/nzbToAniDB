@@ -371,7 +371,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					delete_folder = False
 			
 			if delete_folder:
-				shutil.rmtree(folder)
+				shutil.rmtree(folder, true) #ignore errors from removing folders
 		
 		
 		# Adding.
