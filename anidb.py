@@ -114,7 +114,7 @@ if not options.move and options.delete:
 import unicodedata, string
 
 def removeDisallowedFilenameChars(filename):
-	validFilenameChars = "-_.()[]`' %s%s" % (string.ascii_letters, string.digits)
+	validFilenameChars = "-_.;()[]`' %s%s" % (string.ascii_letters, string.digits)
 	
 	cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
 	return ''.join(c for c in cleanedFilename if c in validFilenameChars)
@@ -361,7 +361,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					delete_folder = False
 			
 			if delete_folder:
-				shutil.rmtree(folder, true) #ignore errors from removing folders
+				shutil.rmtree(folder, True) #ignore errors from removing folders
 		
 		
 		# Adding.
