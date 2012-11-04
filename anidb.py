@@ -206,12 +206,12 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					pass
 								
 				#s = options.format
-				if (info['type'] == 'Movie' and rename['MovieFormat']):
-					s = rename['MovieFormat']
-				elif (info['type'] == 'OVA' and rename['OVAFormat']):
-					s = rename['OVAFormat']
-				elif (rename['TVFormat']):
-					s = rename['TVFormat']
+				if (info['type'] == 'Movie' and rename['movieformat']):
+					s = rename['movieformat']
+				elif (info['type'] == 'OVA' and rename['ovaformat']):
+					s = rename['ovaformat']
+				elif (rename['tvformat']):
+					s = rename['tvformat']
 				else:
 					s = '%ATe% - %EpNo%%Ver% - %ETe% [%GTs%][%FCRC%]'
 				
@@ -281,8 +281,8 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					pass
 								
 				#s = options.format
-				if (move['folderName']):
-					f = move['folderName']
+				if (move['foldername']):
+					f = move['foldername']
 				else:
 					f = '%ATe%'
 				

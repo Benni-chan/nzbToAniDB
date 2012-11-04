@@ -23,7 +23,7 @@ else:
 	except:
 		pass
 	
-	command = sys.executable + " " + os.path.join(os.path.dirname(sys.argv[0]), "anidb.py") + " " + config['sabToAnidb_switches'] + " '" + sys.argv[1] + "'"
+	command = sys.executable + " " + os.path.join(os.path.dirname(sys.argv[0]), "anidb.py") + " " + config['sabtoanidb_switches'] + " '" + sys.argv[1] + "'"
 	if (os.name != "posix"):
 		args = shlex.split(command, posix=False)
 	else:
