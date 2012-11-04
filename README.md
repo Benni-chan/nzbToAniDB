@@ -1,13 +1,78 @@
 # Postprocessing Script for SABnzbd+
 
+This script will hash your downloaded Anime from SABnzbd+ and sync it with your anidb.net account. The file will be renamed and moved to your specified target-directory.
+
+## Installation
+
 To use the script, extract the zip into your sabnzbd script folder and select sabtoanidb.py as your post processing script in your anime category.
 
-You have to enter your anidb username and password into the config file. also you have to modify the target directory in the config file to tell the script, where your anime folder is. (the script will copy the files to a directory with the name of the anime in that folder.)
+## Config
+
+You have to enter your anidb username and password into the config file. Also you have to modify the target directory in the config file to tell the script, where your anime folder is. (the script will copy the files to a directory with the name of the anime in that folder.)
+
+####[AniDB]
+
+<table>
+  <tr>
+    <th>config field</th><th>help</th>
+  </tr>
+  <tr>
+    <td>username</td><td>your anidb.net username</td>
+  </tr>
+  <tr>
+    <td>password</td><td>your anidb.net password</td>
+  </tr>
+  <tr>
+    <td>suffix</td><td>only files with these suffix will be processed</td>
+  </tr>
+  <tr>
+    <td>directory</td><td>target directory to copy your files to (every anime will get its own sub directory)</td>
+  </tr>
+</table>
+
+####[rename]
+
+<table>
+  <tr>
+    <th>config field</th><th>help</th>
+  </tr>
+  <tr>
+    <td>TVFormat</td><td>rename pattern for tv shows (see below for tags)</td>
+  </tr>
+  <tr>
+    <td>MovieFormat</td><td>rename pattern for movies (see below for tags)</td>
+  </tr>
+  <tr>
+    <td>OVAFormat</td><td>rename pattern for ova (see below for tags)</td>
+  </tr>
+</table>
+
+####[move]
+
+<table>
+  <tr>
+    <th>config field</th><th>help</th>
+  </tr>
+  <tr>
+    <td>folderName</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
+  </tr>
+</table>
+
+####[integration]
+
+<table>
+  <tr>
+    <th>config field</th><th>help</th>
+  </tr>
+  <tr>
+    <td>sabToAnidb_switches</td><td>defines, what sabToAnidb.py should do (see below for anidb.py switches)</td>
+  </tr>
+</table>
 
 Note:
 If you use the delete option to delete the sourcefolder after moving, external sub-files will be lost!
 
-## Tags for renaming:
+#### Tags for renaming:
 
     %ATr%: Anime Name (Romaji)
     %ATe%: Anime Name (English)
@@ -48,27 +113,26 @@ If you use the delete option to delete the sourcefolder after moving, external s
     %suf%: File Suffix
 
 
-## anidb.py has several commandline arguments:
+#### anidb.py has several commandline arguments:
 
-```
-Options:
-  -h, --help            show this help message and exit
-  -u USERNAME, --username=USERNAME
-                        AniDB username.
-  -p PASSWORD, --password=PASSWORD
-                        AniDB password.
-  -r, --recursive       Recurse into directories.
-  -s SUFFIX, --suffix=SUFFIX
-                        File suffix for recursive matching.
-  -c, --no-cache        Do not use cached values.
-  -l, --multihash       Calculate additional checksums.
-  -i, --identify        Identify files.
-  -a, --add             Add files to mylist.
-  -w, --watched         Mark files watched.
-  -n, --rename          Rename files.
-  -m, --move            Move Files
-  -x, --delete          Delete Folders after moving files
-  -d DIRECTORY, --directory=DIRECTORY
-                        Target parent directory.
-  -o, --no-color        Disable color output.
-```
+    Options:
+      -h, --help            show this help message and exit
+      -u USERNAME, --username=USERNAME
+                            AniDB username.
+      -p PASSWORD, --password=PASSWORD
+                            AniDB password.
+      -r, --recursive       Recurse into directories.
+      -s SUFFIX, --suffix=SUFFIX
+                            File suffix for recursive matching.
+      -c, --no-cache        Do not use cached values.
+      -l, --multihash       Calculate additional checksums.
+      -i, --identify        Identify files.
+      -a, --add             Add files to mylist.
+      -w, --watched         Mark files watched.
+      -n, --rename          Rename files.
+      -m, --move            Move Files
+      -x, --delete          Delete Folders after moving files
+      -d DIRECTORY, --directory=DIRECTORY
+                            Target parent directory.
+      -o, --no-color        Disable color output.
+
