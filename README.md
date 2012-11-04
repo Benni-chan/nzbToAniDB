@@ -14,7 +14,7 @@ You have to enter your anidb username and password into the config file. Also yo
 
 <table>
   <tr>
-    <th>config field</th><th>help</th>
+    <th>config field</th><th>description</th>
   </tr>
   <tr>
     <td>username</td><td>your anidb.net username</td>
@@ -34,7 +34,7 @@ You have to enter your anidb username and password into the config file. Also yo
 
 <table>
   <tr>
-    <th>config field</th><th>help</th>
+    <th>config field</th><th>description</th>
   </tr>
   <tr>
     <td>tvformat</td><td>rename pattern for tv shows (see below for tags)</td>
@@ -51,7 +51,7 @@ You have to enter your anidb username and password into the config file. Also yo
 
 <table>
   <tr>
-    <th>config field</th><th>help</th>
+    <th>config field</th><th>description</th>
   </tr>
   <tr>
     <td>foldername</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
