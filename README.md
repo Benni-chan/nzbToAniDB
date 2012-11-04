@@ -37,13 +37,13 @@ You have to enter your anidb username and password into the config file. Also yo
     <th>config field</th><th>help</th>
   </tr>
   <tr>
-    <td>TVFormat</td><td>rename pattern for tv shows (see below for tags)</td>
+    <td>tvformat</td><td>rename pattern for tv shows (see below for tags)</td>
   </tr>
   <tr>
-    <td>MovieFormat</td><td>rename pattern for movies (see below for tags)</td>
+    <td>movieformat</td><td>rename pattern for movies (see below for tags)</td>
   </tr>
   <tr>
-    <td>OVAFormat</td><td>rename pattern for ova (see below for tags)</td>
+    <td>ovaformat</td><td>rename pattern for ova (see below for tags)</td>
   </tr>
 </table>
 
@@ -54,7 +54,7 @@ You have to enter your anidb username and password into the config file. Also yo
     <th>config field</th><th>help</th>
   </tr>
   <tr>
-    <td>folderName</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
+    <td>foldername</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
   </tr>
 </table>
 
@@ -65,7 +65,7 @@ You have to enter your anidb username and password into the config file. Also yo
     <th>config field</th><th>help</th>
   </tr>
   <tr>
-    <td>sabToAnidb_switches</td><td>defines, what sabToAnidb.py should do (see below for anidb.py switches)</td>
+    <td>sabtoanidb_switches</td><td>defines, what sabToAnidb.py should do (see below for anidb.py switches)</td>
   </tr>
 </table>
 
