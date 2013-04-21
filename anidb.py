@@ -238,11 +238,11 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					'AYearEnd':  info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
 					'ACatList': info['category'],
 				
-					'EpNo': info['epno'], #File's Episode number
+					'EpNo': "%02d" % (int(info['epno'])), #File's Episode number
 				
 					'Type': info['type'], #Anime type, Value: 'Movie', 'TV', 'OVA', 'Web'
 					'Depr': info['depr'], #File is deprecated if the value is '1'
-					'Cen': {0:'',1:'1'}[(int(info['state']) & 128)], #File is censored if the value is '1'
+					'Cen': {0:'',128:'1'}[(int(info['state']) & 128)], #File is censored if the value is '1'
 					'Ver': {0: '', 4: 'v2', 8: 'v3', 16: 'v4', 32: 'v5'}[(int(info['state']) & 0x3c)], #File version
 					'Source': info['source'], #Where the file came from (HDTV, DTV, WWW, etc)
 					'Quality': info['quality'], #How good the quality of the file is (Very Good, Good, Eye Cancer)
