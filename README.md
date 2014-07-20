@@ -30,6 +30,37 @@ You have to enter your anidb username and password into the config file. Also yo
   </tr>
 </table>
 
+####[plex]
+
+<table>
+  <tr>
+    <th>config field</th><th>description</th>
+  </tr>
+  <tr>
+    <td>host</td><td>hostname or ip for plex media server (if this is empty, plex update is disabled)</td>
+  </tr>
+  <tr>
+    <td>password</td><td>which section of your plex media server should be updated? if this is empty, all sections will be updated</td>
+  </tr>
+</table>
+
+####[xbmc]
+
+<table>
+  <tr>
+    <th>host</th><th>hostname or ip for xbmc (if this is empty, xbmc update is disabled)</th>
+  </tr>
+  <tr>
+    <td>port</td><td>port of your xbmc</td>
+  </tr>
+  <tr>
+    <td>user</td><td>username for xbmc</td>
+  </tr>
+  <tr>
+    <td>password</td><td>password for xbmc</td>
+  </tr>
+</table>
+
 ####[rename]
 
 <table>
@@ -45,16 +76,20 @@ You have to enter your anidb username and password into the config file. Also yo
   <tr>
     <td>ovaformat</td><td>rename pattern for ova (see below for tags)</td>
   </tr>
-</table>
-
-####[move]
-
-<table>
-  <tr>
-    <th>config field</th><th>description</th>
-  </tr>
   <tr>
     <td>foldername</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
+  </tr>
+  <tr>
+    <td>TVDBEpisodeFormat</td><td>rename pattern for Episodes, when using TVDB (see below for tags)</td>
+  </tr>
+  <tr>
+    <td>TVDBFolderName</td><td>rename pattern for Folder, when using TVDB (see below for tags)</td>
+  </tr>
+  <tr>
+    <td>TVDBSeasonFolder</td><td>rename pattern for Season Folder, when using TVDB (see below for tags)</td>
+  </tr>
+  <tr>
+    <td>TVDBSpecialsFolder</td><td>rename pattern for Specials Folder, when using TVDB (see below for tags)</td>
   </tr>
 </table>
 
@@ -65,7 +100,7 @@ You have to enter your anidb username and password into the config file. Also yo
     <th>config field</th><th>help</th>
   </tr>
   <tr>
-    <td>sabtoanidb_switches</td><td>defines, what sabToAnidb.py should do (see below for anidb.py switches)</td>
+    <td>nzbtoanidb_switches</td><td>defines, what nzbToAnidb.py should do (see below for anidb.py switches)</td>
   </tr>
 </table>
 
@@ -77,8 +112,6 @@ If you use the delete option to delete the sourcefolder after moving, external s
     %ATr%: Anime Name (Romaji)
     %ATe%: Anime Name (English)
     %ATk%: Anime Name (Kanji)
-    %ATs%: Anime Name (synonyms) (lists all synoyms currently)
-    %ATo%: Anime Name (other)
     
     %ETr%: Episode title (romaji)
     %ETe%: Episode title (english)
@@ -91,7 +124,6 @@ If you use the delete option to delete the sourcefolder after moving, external s
     %EpCount%: Anime Episode count
     %AYearBegin%: The beginning year of the anime
     %AYearEnd%:  The ending year of the anime
-    %ACatList%: Category of the Anime
     
     %EpNo%: File's Episode number
     
@@ -101,7 +133,6 @@ If you use the delete option to delete the sourcefolder after moving, external s
     %Ver%: File version
     %Source%: Where the file came from (HDTV, DTV, WWW, etc)
     %Quality%: How good the quality of the file is (Very Good, Good, Eye Cancer)
-    %AniDBFN%: Default AniDB filename
     %CurrentFN%: Current Filename
     %FCrc% : The file's crc
     %FCRC%: The file's crc in upper letters
@@ -111,6 +142,14 @@ If you use the delete option to delete the sourcefolder after moving, external s
     %FACodec%: Codecs used for the Audiostreams
     %FVCodec%: Codecs used for the Videostreams
     %suf%: File Suffix
+	
+	Only for TVDB:
+	
+	%TSTe%: TVDB Anime name
+	%TETe%: TVDB episode title
+	%TS%: TVDB Season
+	%TE%: TVDB Episode Number
+	%TSE%: TVDB Season/Episode Combination (like S01E12)
 
 
 #### anidb.py has several commandline arguments:
@@ -125,6 +164,7 @@ If you use the delete option to delete the sourcefolder after moving, external s
       -s SUFFIX, --suffix=SUFFIX
                             File suffix for recursive matching.
       -c, --no-cache        Do not use cached values.
+      -t, --tvdb            Use TVDB
       -l, --multihash       Calculate additional checksums.
       -i, --identify        Identify files.
       -a, --add             Add files to mylist.
@@ -134,5 +174,6 @@ If you use the delete option to delete the sourcefolder after moving, external s
       -x, --delete          Delete Folders after moving files
       -d DIRECTORY, --directory=DIRECTORY
                             Target parent directory.
-      -o, --no-color        Disable color output.
+	  -o, --no-color        Disable color output.
+	  -y, --update          Refresh Media Server (Plex or XBMC)
 
