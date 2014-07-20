@@ -48,7 +48,10 @@ You have to enter your anidb username and password into the config file. Also yo
 
 <table>
   <tr>
-    <th>host</th><th>hostname or ip for xbmc (if this is empty, xbmc update is disabled)</th>
+    <th>config field</th><th>description</th>
+  </tr>
+  <tr>
+    <tr>host</tr><tr>hostname or ip for xbmc (if this is empty, xbmc update is disabled)</tr>
   </tr>
   <tr>
     <td>port</td><td>port of your xbmc</td>
