@@ -4,11 +4,13 @@
 # based on pyanidb
 
 import anidb, anidb.hash
+import tvdb
+
 try:
 	import ConfigParser
 except ImportError:
 	import configparser as ConfigParser
-import optparse, os, sys, getpass, shutil
+import optparse, os, sys, getpass, shutil, urllib2, time
 from collections import deque
 
 # Workaround for input/raw_input
@@ -42,6 +44,9 @@ op.add_option('-s', '--suffix', help = 'File suffix for recursive matching.',
 op.add_option('-c', '--no-cache', help = 'Do not use cached values.',
 	action = 'store_false', dest = 'cache', default = int(config.get('cache', '0')))
 
+op.add_option('-t', '--tvdb', help = 'Match with TvDB and use TvDB naming pattern.',
+	action = 'store_true', dest = 'tvdb', default = False)
+
 op.add_option('-l', '--multihash', help = 'Calculate additional checksums.',
 	action = 'store_true', dest = 'multihash', default = False)
 op.add_option('-i', '--identify', help = 'Identify files.',
@@ -60,6 +65,9 @@ op.add_option('-x', '--delete', help = 'Delete Folders after moving files',
 
 op.add_option('-d', '--directory', help = 'Target parent directory.',
 	action = 'store', dest = 'directory', default = config.get('directory'))
+	
+op.add_option('-y', '--update', help = 'Refreh Media Server',
+	action = 'store_true', dest = 'update', default = False)
 
 op.add_option('-o', '--no-color', help = 'Disable color output.',
 	action = 'store_false', dest = 'color', default = True)
@@ -71,12 +79,12 @@ options, args = op.parse_args(sys.argv[1:])
 # Colors.
 
 if options.color:
-	red    = lambda x: '\x1b[1;31m' + x + '\x1b[0m'
+	red	   = lambda x: '\x1b[1;31m' + x + '\x1b[0m'
 	green  = lambda x: '\x1b[1;32m' + x + '\x1b[0m'
 	yellow = lambda x: '\x1b[1;33m' + x + '\x1b[0m'
 	blue   = lambda x: '\x1b[1;34m' + x + '\x1b[0m'
 else:
-	red    = lambda x: x
+	red	   = lambda x: x
 	green  = lambda x: x
 	yellow = lambda x: x
 	blue   = lambda x: x
@@ -90,7 +98,7 @@ if options.cache:
 	except ImportError:
 		print(red('No xattr, caching disabled.'))
 		options.cache = False
-options.identify = options.identify or options.rename or options.move
+options.identify = options.identify or options.rename or options.move or options.tvdb
 options.login = options.add or options.watched or options.identify
 if not options.suffix:
 	options.suffix = ['avi', 'ogm', 'mkv', 'mp4']
@@ -108,6 +116,10 @@ if not options.directory and options.move:
 if not options.move and options.delete:
 	print(red('Can\'t delete folder without moving files.'))
 	sys.exit(1)
+
+if options.tvdb:
+	animelistfile = os.path.join(os.path.dirname(os.path.realpath(__file__)),"anime-list.xml")
+	mytvdb = tvdb.TvDB(animelistfile)
 
 # filename renaming
 
@@ -190,23 +202,34 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			if (info['english'] == ""): info['english'] = info['romaji']
 			
 			print('{0} [{1}] {2} ({3}) - {4} - {5} ({6})'.format(green('Identified:'), info['gtag'], info['romaji'], info['english'], info['epno'], info['epromaji'], info['epname']))
-						
+			
+		# get tvdb info
+		
+		if options.tvdb:
+			tvdbinfo = mytvdb.find_tvdb(info["aid"],info["epno"])
+			if tvdbinfo:
+				info.update(tvdbinfo)
+				print('{0} {1} S{2} E{3} - {4}'.format(green('TvDB:'), info['tvdbseriesname'].encode('utf-8'), info['tvdbseason'], info['tvdbepnum'][0] if len(info['tvdbepnum']) == 1 else info['tvdbepnum'][0]+"-"+info['tvdbepnum'][len(info['tvdbepnum'])-1], info['tvdbepname'].encode('utf-8')))
+			else:
+				print red('TVDB: ') + 'no match found!'
+		
 		# Renaming.
 		
 		if options.rename or options.move:
+			rename = {}
+			try:
+				cp = ConfigParser.ConfigParser()
+				cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+				for option in cp.options('rename'):
+					rename[option] = cp.get('rename', option)
+			except:
+				pass
+			
 			if options.rename:
 				
-				rename = {}
-				try:
-					cp = ConfigParser.ConfigParser()
-					cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
-					for option in cp.options('rename'):
-						rename[option] = cp.get('rename', option)
-				except:
-					pass
-								
-				#s = options.format
-				if (info['type'] == 'Movie' and rename['movieformat']):
+				if options.tvdb and tvdbinfo:
+					s = rename['tvdbepisodeformat']
+				elif (info['type'] == 'Movie' and rename['movieformat']):
 					s = rename['movieformat']
 				elif (info['type'] == 'OVA' and rename['ovaformat']):
 					s = rename['ovaformat']
@@ -220,8 +243,8 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					'ATr': info['romaji'],
 					'ATe': info['english'],
 					'ATk': info['kanji'],
-					'ATs': info['synonym'],
-					'ATo': info['other'],
+					#'ATs': info['synonym'],
+					#'ATo': info['other'],
 				
 					#Episode title, languages as above
 					'ETr': info['epromaji'],
@@ -231,22 +254,22 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					#Group title, s: short, l: long
 					'GTs':info['gtag'],
 					'GTl':info['gname'],
-				
+					
 					'EpHiNo': info['eptotal'], #Highest (subbed) episode number
 					'EpCount': info['eptotal'], #Anime Episode count
 					'AYearBegin': info['year'].split("-")[0],
-					'AYearEnd':  info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
-					'ACatList': info['category'],
+					'AYearEnd':	 info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
+					#'ACatList': info['category'],
 				
-					'EpNo': "%02d" % (int(info['epno'])), #File's Episode number
+					'EpNo': info['epno'] if (len(info['epno']) > 1) else '0' + info['epno'], #File's Episode number
 				
 					'Type': info['type'], #Anime type, Value: 'Movie', 'TV', 'OVA', 'Web'
 					'Depr': info['depr'], #File is deprecated if the value is '1'
-					'Cen': {0:'',128:'1'}[(int(info['state']) & 128)], #File is censored if the value is '1'
+					'Cen': {0:'',128:'censored'}[(int(info['state']) & 128)], #File is censored
 					'Ver': {0: '', 4: 'v2', 8: 'v3', 16: 'v4', 32: 'v5'}[(int(info['state']) & 0x3c)], #File version
 					'Source': info['source'], #Where the file came from (HDTV, DTV, WWW, etc)
 					'Quality': info['quality'], #How good the quality of the file is (Very Good, Good, Eye Cancer)
-					'AniDBFN': info['anifilename'], #Default AniDB filename
+					#'AniDBFN': info['anifilename'], #Default AniDB filename
 					'CurrentFN': os.path.basename(file.name), #Current Filename
 					'FCrc' : info['crc32'],#The file's crc
 					'FCRC': info['crc32'].upper(),
@@ -255,11 +278,22 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					'FSLng': info['sublang'], #List of available subtitle languages (japanese, english'japanese'german)
 					'FACodec': info['acodec'], #Codecs used for the Audiostreams
 					'FVCodec': info['vcodec'], #Codecs used for the Videostreams
-					'suf': info['filetype']}
+					'suf': info['filetype'],
+				}
+				
+				if options.tvdb and tvdbinfo:
+					rename_data.update({	
+						#tvdb
+						'TSTe': info['tvdbseriesname'],
+						'TETe': info['tvdbepname'],
+						'TS': info['tvdbseason'],
+						'TE': info['tvdbepnum'][0] if len(info['tvdbepnum']) == 1 else info['tvdbepnum'][0]+"-"+info['tvdbepnum'][len(info['tvdbepnum'])-1],
+						'TSE': 'S'+info['tvdbseason']+'E'+info['tvdbepnum'][0] if len(info['tvdbepnum']) == 1 else 'S'+info['tvdbseason']+'E'+info['tvdbepnum'][0]+"-E"+info['tvdbepnum'][len(info['tvdbepnum'])-1],
+					})
 				
 				# parse s to replace tags
-				for name, value in rename.items():
-					s = s.replace(r'%' + name + r'%', value)
+				#for name, value in rename.items():
+				#	s = s.replace(r'%' + name + r'%', value)
 				
 				for name, value in rename_data.items():
 					s = s.replace(r'%' + name + r'%', value)
@@ -269,30 +303,30 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				# change spaces to underscores, if first character in s is an underscore
 				if s[0] == '_':
 					s = s[1:].replace(' ', '_')
-			
+				
 			if options.move:
-				move = {}
-				try:
-					cp = ConfigParser.ConfigParser()
-					cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
-					for option in cp.options('move'):
-						move[option] = cp.get('move', option)
-				except:
-					pass
-								
-				#s = options.format
-				if (move['foldername']):
-					f = move['foldername']
+				
+				
+				if options.tvdb and tvdbinfo:
+					f = rename['tvdbfoldername']
+					if int(info['tvdbseason']) > 0:
+						fs = rename['tvdbseasonfolder']
+					else:
+						fs = rename['tvdbspecialsfolder']
+				elif (rename['foldername']):
+					f = rename['foldername']
+					fs = None
 				else:
 					f = '%ATe%'
+					fs = None
 				
 				move_data = {
 					#Anime title, r: romaji, e: english, k: kanji, s: synonym, o: other
 					'ATr': info['romaji'],
 					'ATe': info['english'],
 					'ATk': info['kanji'],
-					'ATs': info['synonym'],
-					'ATo': info['other'],
+					#'ATs': info['synonym'],
+					#'ATo': info['other'],
 				
 					#Group title, s: short, l: long
 					'GTs':info['gtag'],
@@ -301,8 +335,8 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					'EpHiNo': info['eptotal'], #Highest (subbed) episode number
 					'EpCount': info['eptotal'], #Anime Episode count
 					'AYearBegin': info['year'].split("-")[0],
-					'AYearEnd':  info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
-					'ACatList': info['category'],
+					'AYearEnd':	 info['year'].split("-")[1] if (info['year'].find('-') > 0) else '', #The beginning & ending year of the anime
+					#'ACatList': info['category'],
 					
 					'Type': info['type'], #Anime type, Value: 'Movie', 'TV', 'OVA', 'Web'
 					'Source': info['source'], #Where the file came from (HDTV, DTV, WWW, etc)
@@ -314,17 +348,32 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					'FVCodec': info['vcodec'], #Codecs used for the Videostreams
 					'suf': info['filetype']}
 				
+				if options.tvdb and tvdbinfo:
+					move_data.update({	
+						#tvdb
+						'TSTe': info['tvdbseriesname'],
+						'TETe': info['tvdbepname'],
+						'TS': info['tvdbseason'],
+						'TE': info['tvdbepnum'][0] if len(info['tvdbepnum']) == 1 else info['tvdbepnum'][0]+"-"+info['tvdbepnum'][len(info['tvdbepnum'])-1],
+						'TSE': 'S'+info['tvdbseason']+'E'+info['tvdbepnum'][0] if len(info['tvdbepnum']) == 1 else 'S'+info['tvdbseason']+'E'+info['tvdbepnum'][0]+"-E"+info['tvdbepnum'][len(info['tvdbepnum'])-1],
+					})
+				
 				# parse f to replace tags
-				for name, value in move.items():
-					f = f.replace(r'%' + name + r'%', value)
+				#for name, value in rename.items():
+				#	f = f.replace(r'%' + name + r'%', value)
 				
 				for name, value in move_data.items():
 					f = f.replace(r'%' + name + r'%', value)
 				
+				if fs:
+					for name, value in move_data.items():
+						fs = fs.replace(r'%' + name + r'%', value)
+				
 				# change spaces to underscores, if first character in s is an underscore
 				if f[0] == '_':
 					f = f[1:].replace(' ', '_')
-			
+				if fs and fs[0] == '_':
+					fs = fs[1:].replace(' ', '_')
 			
 			#do the rename and move
 				
@@ -340,16 +389,29 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				
 			if (options.move):
 				subdir = removeDisallowedFilenameChars(f)
-				
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
+					
+				if fs:
+					seasondir = removeDisallowedFilenameChars(fs)
+					while seasondir.startswith('.'):
+						seasondir = seasondir[1:]
+					subdir = os.path.join(subdir,seasondir)
+				
 				path = os.path.join(options.directory, subdir)
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
-					os.umask(0007)
-					os.mkdir(path,0770)
+					oldumask = os.umask(000)
+					os.makedirs(path,0777)
+					os.umask(oldumask)
 			
-			shutil.move(file.name, os.path.join(path,filename))
+			
+			target = os.path.join(path,filename)
+			#failsave against long filenames
+			if len(target) > 255:
+				target = target[:250].strip() + target[-4:]
+			
+			shutil.move(file.name, target)
 		
 		if options.delete:
 			delete_folder = True
@@ -382,6 +444,58 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 	
 	except anidb.AniDBNotInMylist:
 		print(red('File not in mylist.'))
+
+# notify PlexMediaServer
+
+if options.update and hashed > 0:
+
+	plex = {}
+	try:
+		cp = ConfigParser.ConfigParser()
+		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+		for option in cp.options('plex'):
+			plex[option] = cp.get('plex', option)
+	
+		if (plex['host'] != ""):
+			if (plex["sections"] == ""):
+				plex["sections"] = "all"
+	
+			for section in plex["sections"].split(","):
+				req = urllib2.Request("http://"+plex["host"]+":32400/library/sections/"+section+"/refresh")
+				try:
+					urllib2.urlopen(req)
+				except urllib2.HTTPError, e:
+					print(red('could not notify Plex Media Server'))
+					print e.code
+				else:
+					print(green('notified Plex Media Server'))
+	except:
+		pass
+	
+	
+
+# notify XBMC
+
+if options.update and hashed > 0:
+	xbmc = {}
+	try:
+		cp = ConfigParser.ConfigParser()
+		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+		for option in cp.options('xbmc'):
+			plex[option] = cp.get('xbmc', option)
+		
+		if (xbmc['host'] != ""):
+			req = urllib2.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
+			try:
+				urllib2.urlopen(req)
+			except urllib2.HTTPError, e:
+				print(red('could not notify XBMC'))
+				print e.code
+			else:
+				print(green('notified XBMC'))
+	except:
+		pass
+	
 
 # Finished.
 
