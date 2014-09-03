@@ -10,7 +10,7 @@ try:
 	import ConfigParser
 except ImportError:
 	import configparser as ConfigParser
-import optparse, os, sys, getpass, shutil, urllib2, time
+import optparse, os, sys, getpass, shutil, urllib2, time, json
 from collections import deque
 
 # Workaround for input/raw_input
@@ -482,11 +482,15 @@ if options.update and hashed > 0:
 		cp = ConfigParser.ConfigParser()
 		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
 		for option in cp.options('xbmc'):
-			plex[option] = cp.get('xbmc', option)
+			xbmc[option] = cp.get('xbmc', option)
 		
 		if (xbmc['host'] != ""):
-			req = urllib2.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
-			try:
+			if (xbmc['path'] != "" and hashed == 1):
+                updateCommand = '{"jsonrpc":"2.0","method":"VideoLibrary.Scan","params":{"directory":%s},"id":1}' % json.dumps(xbmc['path'] + subdir + '/')
+                req = 'http://'+xbmc['user']+':'+xbmc['password']+'@'+xbmc['host']+':'+xbmc['port']+'/jsonrpc?request='+updateCommand
+            else:
+                req = urllib2.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
+            try:
 				urllib2.urlopen(req)
 			except urllib2.HTTPError, e:
 				print(red('could not notify XBMC'))

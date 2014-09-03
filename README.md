@@ -40,7 +40,7 @@ You have to enter your anidb username and password into the config file. Also yo
     <td>host</td><td>hostname or ip for plex media server (if this is empty, plex update is disabled)</td>
   </tr>
   <tr>
-    <td>password</td><td>which section of your plex media server should be updated? if this is empty, all sections will be updated</td>
+    <td>sections</td><td>which section of your plex media server should be updated (if more than one, separate by comma)? if this is empty, all sections will be updated</td>
   </tr>
 </table>
 
@@ -61,6 +61,9 @@ You have to enter your anidb username and password into the config file. Also yo
   </tr>
   <tr>
     <td>password</td><td>password for xbmc</td>
+  </tr>
+  <tr>
+    <td>path</td><td>library path for updating only the added anime (leave empty to force update of whole library). If more than one episode is added, the whole library will be scanned.</td>
   </tr>
 </table>
 
