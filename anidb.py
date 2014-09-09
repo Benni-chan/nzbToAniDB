@@ -79,12 +79,12 @@ options, args = op.parse_args(sys.argv[1:])
 # Colors.
 
 if options.color:
-	red	   = lambda x: '\x1b[1;31m' + x + '\x1b[0m'
+	red    = lambda x: '\x1b[1;31m' + x + '\x1b[0m'
 	green  = lambda x: '\x1b[1;32m' + x + '\x1b[0m'
 	yellow = lambda x: '\x1b[1;33m' + x + '\x1b[0m'
 	blue   = lambda x: '\x1b[1;34m' + x + '\x1b[0m'
 else:
-	red	   = lambda x: x
+	red    = lambda x: x
 	green  = lambda x: x
 	yellow = lambda x: x
 	blue   = lambda x: x
