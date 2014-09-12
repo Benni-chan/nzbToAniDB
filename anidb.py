@@ -126,7 +126,7 @@ if options.tvdb:
 import unicodedata, string
 
 def removeDisallowedFilenameChars(filename):
-	validFilenameChars = "-_.;()[]`' %s%s" % (string.ascii_letters, string.digits)
+	validFilenameChars = "-_.;()[]`'! %s%s" % (string.ascii_letters, string.digits)
 	
 	cleanedFilename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore')
 	return ''.join(c for c in cleanedFilename if c in validFilenameChars)
