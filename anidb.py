@@ -10,7 +10,7 @@ try:
 	import ConfigParser
 except ImportError:
 	import configparser as ConfigParser
-import optparse, os, sys, getpass, shutil, urllib2, time, json
+import optparse, os, sys, getpass, shutil, urllib, time, json
 from collections import deque
 
 # Workaround for input/raw_input
@@ -461,10 +461,10 @@ if options.update and hashed > 0:
 				plex["sections"] = "all"
 	
 			for section in plex["sections"].split(","):
-				req = urllib2.Request("http://"+plex["host"]+":32400/library/sections/"+section+"/refresh")
+				req = urllib.Request("http://"+plex["host"]+":32400/library/sections/"+section+"/refresh")
 				try:
-					urllib2.urlopen(req)
-				except urllib2.HTTPError, e:
+					urllib.urlopen(req)
+				except urllib.HTTPError, e:
 					print(red('could not notify Plex Media Server'))
 					print e.code
 				else:
@@ -486,13 +486,13 @@ if options.update and hashed > 0:
 		
 		if (xbmc['host'] != ""):
 			if (xbmc['path'] != "" and hashed == 1):
-				updateCommand = '{"jsonrpc":"2.0","method":"VideoLibrary.Scan","params":{"directory":%s},"id":1}' % json.dumps(xbmc['path'] + subdir + '/')
-				req = 'http://'+xbmc['user']+':'+xbmc['password']+'@'+xbmc['host']+':'+xbmc['port']+'/jsonrpc?request='+updateCommand
+				updateCommand = '{"jsonrpc":"2.0","method":"VideoLibrary.Scan","params":{"directory":%s},"id":1}' % json.dumps(xbmc['path'] + f + '/')
+				req = 'http://'+xbmc['user']+':'+xbmc['password']+'@'+xbmc['host']+':'+xbmc['port']+'/jsonrpc?request='+urllib.quote(updateCommand,'')
 			else:
-				req = urllib2.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
+				req = urllib.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
 			try:
-				urllib2.urlopen(req)
-			except urllib2.HTTPError, e:
+				urllib.urlopen(req)
+			except urllib.HTTPError, e:
 				print(red('could not notify XBMC'))
 				print e.code
 			else:
