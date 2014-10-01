@@ -465,10 +465,10 @@ if options.update and hashed > 0:
 				try:
 					urllib.urlopen(req)
 				except urllib.HTTPError, e:
-					print(red('could not notify Plex Media Server'))
+					print(red('Could not notify Plex Media Server'))
 					print e.code
 				else:
-					print(green('notified Plex Media Server'))
+					print(green('Notified Plex Media Server'))
 	except:
 		pass
 	
@@ -493,10 +493,10 @@ if options.update and hashed > 0:
 			try:
 				urllib.urlopen(req)
 			except urllib.HTTPError, e:
-				print(red('could not notify XBMC'))
+				print(red('Could not notify XBMC'))
 				print e.code
 			else:
-				print(green('notified XBMC'))
+				print(green('Notified XBMC'))
 	except:
 		pass
 	
