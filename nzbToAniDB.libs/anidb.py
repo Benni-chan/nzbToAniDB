@@ -22,7 +22,7 @@ if hasattr(__builtins__, 'raw_input'):
 config = {}
 try:
 	cp = ConfigParser.ConfigParser()
-	cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+	cp.read(os.path.join(os.path.dirname(sys.argv[0]), "..", "anidb.cfg"))
 	for option in cp.options('AniDB'):
 		config[option] = cp.get('AniDB', option)
 except:
@@ -219,7 +219,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			rename = {}
 			try:
 				cp = ConfigParser.ConfigParser()
-				cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+				cp.read(os.path.join(os.path.dirname(sys.argv[0]), "..", "anidb.cfg"))
 				for option in cp.options('rename'):
 					rename[option] = cp.get('rename', option)
 			except:
@@ -452,7 +452,7 @@ if options.update and hashed > 0:
 	plex = {}
 	try:
 		cp = ConfigParser.ConfigParser()
-		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "..", "anidb.cfg"))
 		for option in cp.options('plex'):
 			plex[option] = cp.get('plex', option)
 	
@@ -465,10 +465,10 @@ if options.update and hashed > 0:
 				try:
 					urllib.urlopen(req)
 				except urllib.HTTPError, e:
-					print(red('could not notify Plex Media Server'))
+					print(red('Could not notify Plex Media Server'))
 					print e.code
 				else:
-					print(green('notified Plex Media Server'))
+					print(green('Notified Plex Media Server'))
 	except:
 		pass
 	
@@ -480,7 +480,7 @@ if options.update and hashed > 0:
 	xbmc = {}
 	try:
 		cp = ConfigParser.ConfigParser()
-		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "anidb.cfg"))
+		cp.read(os.path.join(os.path.dirname(sys.argv[0]), "..", "anidb.cfg"))
 		for option in cp.options('xbmc'):
 			xbmc[option] = cp.get('xbmc', option)
 		
@@ -493,10 +493,10 @@ if options.update and hashed > 0:
 			try:
 				urllib.urlopen(req)
 			except urllib.HTTPError, e:
-				print(red('could not notify XBMC'))
+				print(red('Could not notify XBMC'))
 				print e.code
 			else:
-				print(green('notified XBMC'))
+				print(green('Notified XBMC'))
 	except:
 		pass
 	

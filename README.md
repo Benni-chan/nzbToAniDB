@@ -1,6 +1,6 @@
-# Postprocessing Script for SABnzbd+
+# Postprocessing Script for Anime
 
-This script will hash your downloaded Anime from SABnzbd+ and sync it with your anidb.net account. The file will be renamed and moved to your specified target-directory.
+This script will hash your downloaded Anime from **SABnzbd+** or **NZBGet** and sync it with your anidb.net account. The file will be renamed and moved to your specified target-directory.
 
 ## Installation
 
