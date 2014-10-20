@@ -28,6 +28,9 @@ You have to enter your anidb username and password into the config file. Also yo
   <tr>
     <td>directory</td><td>target directory to copy your files to (every anime will get its own sub directory)</td>
   </tr>
+  <tr>
+    <td>directorymovie</td><td>target directory to copy your files to (every anime movie will get its own sub directory)</td>
+  </tr>
 </table>
 
 ####[plex]
@@ -84,6 +87,9 @@ You have to enter your anidb username and password into the config file. Also yo
   </tr>
   <tr>
     <td>foldername</td><td>naming pattern for anime-subfolder (only used when moving file)</td>
+  </tr>
+  <tr>
+    <td>foldernamemovie</td><td>naming pattern for anime movie subfolder (only used when moving file)</td>
   </tr>
   <tr>
     <td>TVDBEpisodeFormat</td><td>rename pattern for Episodes, when using TVDB (see below for tags)</td>
@@ -180,6 +186,8 @@ If you use the delete option to delete the sourcefolder after moving, external s
       -x, --delete          Delete Folders after moving files
       -d DIRECTORY, --directory=DIRECTORY
                             Target parent directory.
+      -k DIRECTORY, --directory-movie=DIRECTORY
+                            Target parent directory for anime movies.
 	  -o, --no-color        Disable color output.
 	  -y, --update          Refresh Media Server (Plex or XBMC)
 
