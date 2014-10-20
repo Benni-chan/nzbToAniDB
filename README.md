@@ -29,7 +29,7 @@ You have to enter your anidb username and password into the config file. Also yo
     <td>directory</td><td>target directory to copy your files to (every anime will get its own sub directory)</td>
   </tr>
   <tr>
-    <td>directorymovie</td><td>target directory to copy your files to (every anime movie will get its own sub directory)</td>
+    <td>directorymovie</td><td>target directory to copy non-tvdb movies (every anime movie will get its own sub directory)</td>
   </tr>
 </table>
 
