@@ -109,8 +109,15 @@ class TvDB:
 			seriesurl = "http://thetvdb.com/api/"+tvdbapikey+"/series/"+tvdbid+"/en.xml"
 			episodeurl = "http://thetvdb.com/api/"+tvdbapikey+"/series/"+tvdbid+"/default/"+tvdbseason+"/"+tvdbepnum+"/en.xml"
 		
-			seriesdata = ET.fromstring(urllib2.urlopen(seriesurl).read())
-		
+			try:
+				seriesdata
+			except NameError:
+				try:
+					seriesdata = ET.fromstring(urllib2.urlopen(seriesurl).read())
+				except urllib2.HTTPError, e:
+					return None
+
+
 			try:
 				episodedata
 			except NameError:
