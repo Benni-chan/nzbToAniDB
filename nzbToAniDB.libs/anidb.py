@@ -461,7 +461,7 @@ if options.update and hashed > 0:
 				plex["sections"] = "all"
 	
 			for section in plex["sections"].split(","):
-				req = urllib.Request("http://"+plex["host"]+":32400/library/sections/"+section+"/refresh")
+				req = "http://"+plex["host"]+":32400/library/sections/"+section+"/refresh"
 				try:
 					urllib.urlopen(req)
 				except urllib.HTTPError, e:
@@ -489,7 +489,7 @@ if options.update and hashed > 0:
 				updateCommand = '{"jsonrpc":"2.0","method":"VideoLibrary.Scan","params":{"directory":%s},"id":1}' % json.dumps(xbmc['path'] + f + '/')
 				req = 'http://'+xbmc['user']+':'+xbmc['password']+'@'+xbmc['host']+':'+xbmc['port']+'/jsonrpc?request='+urllib.quote(updateCommand,'')
 			else:
-				req = urllib.Request("http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}")
+				req = "http://"+xbmc["user"]+":"+xbmc["password"]+"@"+xbmc["host"]+":"+xbmc["port"]+"/jsonrpc?request={\"jsonrpc\":\"2.0\",\"method\":\"VideoLibrary.Scan\"}"
 			try:
 				urllib.urlopen(req)
 			except urllib.HTTPError, e:
