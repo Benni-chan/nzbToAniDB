@@ -5,6 +5,7 @@
 
 import anidb, anidb.hash
 import tvdb
+from datetime import datetime
 
 try:
 	import ConfigParser
@@ -18,6 +19,12 @@ if hasattr(__builtins__, 'raw_input'):
 	input = raw_input
 
 # Config.
+
+import os
+def touchDir(path):
+	atime = int(time.mktime(datetime.now().timetuple()))
+	mtime = atime
+	os.utime(path,(atime,mtime))
 
 config = {}
 try:
@@ -65,6 +72,9 @@ op.add_option('-x', '--delete', help = 'Delete Folders after moving files',
 
 op.add_option('-d', '--directory', help = 'Target parent directory.',
 	action = 'store', dest = 'directory', default = config.get('directory'))
+
+op.add_option('-k', '--directory-movie', help = 'Target parent directory for movies.',
+	action = 'store', dest = 'directorymovie', default = config.get('directorymovie'))
 	
 op.add_option('-y', '--update', help = 'Refreh Media Server',
 	action = 'store_true', dest = 'update', default = False)
@@ -305,14 +315,16 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 					s = s[1:].replace(' ', '_')
 				
 			if options.move:
-				
-				
+
 				if options.tvdb and tvdbinfo:
 					f = rename['tvdbfoldername']
 					if int(info['tvdbseason']) > 0:
 						fs = rename['tvdbseasonfolder']
 					else:
 						fs = rename['tvdbspecialsfolder']
+				elif (info['type'] == "Movie" and rename['foldernamemovie']):
+					f = rename['foldernamemovie']
+					fs = None
 				elif (rename['foldername']):
 					f = rename['foldername']
 					fs = None
@@ -385,20 +397,29 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				while filename.startswith('.'):
 					filename = filename[1:]
 				print('{0} {1}'.format(yellow('Renaming to:'), filename))
+
 				path = os.path.dirname(file.name)
 				
 			if (options.move):
 				subdir = removeDisallowedFilenameChars(f)
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
-					
+
+				if (options.directorymovie and info['type'] == 'Movie' and not tvdbinfo):
+					target_directory = options.directorymovie
+				else:
+					target_directory = options.directory
+				
+				basedir = os.path.join(target_directory, subdir)
+
 				if fs:
 					seasondir = removeDisallowedFilenameChars(fs)
 					while seasondir.startswith('.'):
 						seasondir = seasondir[1:]
 					subdir = os.path.join(subdir,seasondir)
-				
-				path = os.path.join(options.directory, subdir)
+
+				path = os.path.join(target_directory, subdir)
+
 				print('{0} {1}'.format(yellow('Moving to:'), path))
 				if (os.path.exists(path) == False):
 					oldumask = os.umask(000)
@@ -407,6 +428,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 			
 			
 			target = os.path.join(path,filename)
+			touchDir(basedir)
 			#failsave against long filenames
 			if len(target) > 255:
 				target = target[:250].strip() + target[-4:]
