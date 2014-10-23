@@ -8,6 +8,8 @@ To use the script, extract the zip into your sabnzbd script folder and select sa
 
 ## Config
 
+First, rename anime.cfg.default to anime.cfg
+
 You have to enter your anidb username and password into the config file. Also you have to modify the target directory in the config file to tell the script, where your anime folder is. (the script will copy the files to a directory with the name of the anime in that folder.)
 
 ####[AniDB]
