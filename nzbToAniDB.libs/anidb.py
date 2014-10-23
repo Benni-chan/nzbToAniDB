@@ -447,7 +447,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 
 # notify PlexMediaServer
 
-if options.update and hashed > 0:
+if options.update and hashed > 0 and hashed > unknown:
 
 	plex = {}
 	try:
@@ -476,7 +476,7 @@ if options.update and hashed > 0:
 
 # notify XBMC
 
-if options.update and hashed > 0:
+if options.update and hashed > 0 and hashed > unknown:
 	xbmc = {}
 	try:
 		cp = ConfigParser.ConfigParser()
