@@ -405,7 +405,7 @@ for file in anidb.hash.hash_files(files, options.cache, (('ed2k', 'md5', 'sha1',
 				while subdir.startswith('.'):
 					subdir = subdir[1:]
 
-				if (options.directorymovie and info['type'] == 'Movie' and not tvdbinfo):
+				if (options.directorymovie and info['type'] == 'Movie'):
 					target_directory = options.directorymovie
 				else:
 					target_directory = options.directory
